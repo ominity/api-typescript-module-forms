@@ -1,0 +1,21 @@
+{
+  "name": "ominity-api-modules-template",
+  "version": "0.0.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./models": "./src/models/index.ts",
+    "./models/operations": "./src/models/operations/index.ts",
+    "./sdk": "./src/sdk/index.ts",
+    "./funcs": "./src/funcs/index.ts"
+  },
+  "publish": {
+    "include": [
+      "LICENSE.md",
+      "README.md",
+      "RUNTIMES.md",
+      "USAGE.md",
+      "jsr.json",
+      "src/**/*.ts"
+    ]
+  }
+}
