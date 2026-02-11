@@ -8,29 +8,29 @@ import type {
   Ominity,
   OminityModuleDefinition,
 } from "@ominity/api-typescript";
-import { Bookings } from "./bookings/index.js";
+import { Forms } from "./forms/index.js";
 
-export { Bookings } from "./bookings/index.js";
+export { Forms } from "./forms/index.js";
 
-export type BookingsModule = Bookings;
+export type FormsModule = Forms;
 
-export function bookingsModule(): OminityModuleDefinition<
+export function formsModule(): OminityModuleDefinition<
   Ominity,
-  "bookings",
-  Bookings
+  "forms",
+  Forms
 > {
   return {
-    name: "bookings",
+    name: "forms",
     init(client: Ominity) {
-      return new Bookings(client._options);
+      return new Forms(client._options);
     },
   };
 }
 
-export const BookingsModule = bookingsModule();
+export const FormsModule = formsModule();
 
 declare module "@ominity/api-typescript" {
   interface OminityModules {
-    bookings: Bookings;
+    forms: Forms;
   }
 }

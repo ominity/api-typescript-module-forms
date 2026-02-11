@@ -1,5 +1,5 @@
 /*
- * Booking event model.
+ * Form model.
  *
  * Rename this resource and fields for your real module.
  */
@@ -13,36 +13,36 @@ import {
   Paginated,
 } from "@ominity/api-typescript/models";
 
-export type BookingEvent = {
+export type Form = {
   resource: string;
   id: number | string;
   title: string;
-  startsAt: string;
-  endsAt?: string | null | undefined;
+  slug: string; // guessing a common field for forms
+  description?: string | null | undefined;
   links?: HalLinks;
 };
 
 /** @internal */
-export const BookingEvent$inboundSchema: z.ZodType<BookingEvent> = z.object({
+export const Form$inboundSchema: z.ZodType<Form> = z.object({
   resource: z.string(),
   id: z.union([z.number().int(), z.string()]),
   title: z.string(),
-  startsAt: z.string(),
-  endsAt: z.string().nullable().optional(),
+  slug: z.string(),
+  description: z.string().nullable().optional(),
   _links: HalLinks$inboundSchema.optional(),
 })
   .loose()
-  .transform((v) => remap$(v, { _links: "links" }) as BookingEvent);
+  .transform((v) => remap$(v, { _links: "links" }) as Form);
 
-export type BookingEventsListResponse = Paginated<BookingEvent>;
+export type FormsListResponse = Paginated<Form>;
 
 /** @internal */
-export const BookingEventsListResponse$inboundSchema: z.ZodType<
-  BookingEventsListResponse
+export const FormsListResponse$inboundSchema: z.ZodType<
+  FormsListResponse
 > = z.object({
   _embedded: z.object({
-    events: z.array(BookingEvent$inboundSchema),
+    forms: z.array(Form$inboundSchema),
   }),
   count: z.number(),
   _links: HalLinks$inboundSchema.optional(),
-}).transform((v) => buildPaginated(v._embedded.events, v.count, v._links));
+}).transform((v) => buildPaginated(v._embedded.forms, v.count, v._links));

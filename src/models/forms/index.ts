@@ -2,4 +2,4 @@
  * Bookings models.
  */
 
-export * from "./event.js";
+export * from "./form.js";

@@ -1,2 +1,2 @@
-export * from "./bookings/eventsList.js";
-export * from "./bookings/eventsGet.js";
+export * from "./forms/list.js";
+export * from "./forms/get.js";

@@ -6,11 +6,11 @@
 
 import * as z from "zod/v4";
 import {
-  BookingEvent,
-  BookingEventsListResponse,
-} from "../bookings/event.js";
+  Form,
+  FormsListResponse,
+} from "../forms/form.js";
 
-export type EventsListParams = {
+export type FormsListParams = {
   page?: number | undefined;
   limit?: number | undefined;
   include?: string | string[] | undefined;
@@ -18,21 +18,21 @@ export type EventsListParams = {
   sort?: string | string[] | undefined;
 };
 
-export type EventGetParams = {
+export type FormGetParams = {
   include?: string | string[] | undefined;
 };
 
-export type ListEventsRequest = EventsListParams;
-export type ListEventsResponse = BookingEventsListResponse;
+export type ListFormsRequest = FormsListParams;
+export type ListFormsResponse = FormsListResponse;
 
-export type GetEventRequest = EventGetParams & {
+export type GetFormRequest = FormGetParams & {
   id: number | string;
 };
 
-export type GetEventResponse = BookingEvent;
+export type GetFormResponse = Form;
 
 /** @internal */
-export const EventsListParams$outboundSchema: z.ZodType<EventsListParams> = z
+export const FormsListParams$outboundSchema: z.ZodType<FormsListParams> = z
   .object({
     page: z.number().int().optional(),
     limit: z.number().int().optional(),
@@ -43,14 +43,14 @@ export const EventsListParams$outboundSchema: z.ZodType<EventsListParams> = z
   .loose();
 
 /** @internal */
-export const EventGetParams$outboundSchema: z.ZodType<EventGetParams> = z
+export const FormGetParams$outboundSchema: z.ZodType<FormGetParams> = z
   .object({
     include: z.union([z.string(), z.array(z.string())]).optional(),
   })
   .loose();
 
 /** @internal */
-export const GetEventRequest$outboundSchema: z.ZodType<GetEventRequest> = z
+export const GetFormRequest$outboundSchema: z.ZodType<GetFormRequest> = z
   .object({
     id: z.union([z.string(), z.number()]),
     include: z.union([z.string(), z.array(z.string())]).optional(),
