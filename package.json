@@ -1,6 +1,6 @@
 {
   "name": "@ominity/api-module-forms",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Ominity",
   "type": "module",
   "tshy": {
@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "@ominity/api-typescript": "^0.0.2"
+    "@ominity/api-typescript": "^1.1.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
