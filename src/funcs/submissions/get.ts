@@ -1,15 +1,9 @@
 /*
- * List booking events.
- *
- * Replace the path and operation ID for your module.
+ * Get form submission.
  */
 
 import { ClientSDK, RequestOptions } from "@ominity/api-typescript/lib/sdks";
-import {
-  encodeDeepObjectQuery,
-  encodeFormQuery,
-  queryJoin,
-} from "@ominity/api-typescript/lib/encodings";
+import { encodeFormQuery } from "@ominity/api-typescript/lib/encodings";
 import * as M from "@ominity/api-typescript/lib/matchers";
 import { safeParse } from "@ominity/api-typescript/lib/schemas";
 import {
@@ -27,18 +21,16 @@ import {
   UnexpectedClientError,
 } from "@ominity/api-typescript/models/errors/http-client-errors";
 import * as operations from "../../models/operations/index.js";
-import { FormsListResponse$inboundSchema } from "../../models/forms/form.js";
-import { applyPaginationParams } from "@ominity/api-typescript/models/pagination";
 import { APICall, APIPromise } from "@ominity/api-typescript/types/async";
-import { OK, Result } from "@ominity/api-typescript/types/fp";
+import { Result } from "@ominity/api-typescript/types/fp";
 
-export function formsList(
+export function submissionsGet(
   client: ClientSDK,
-  request?: operations.FormsListParams | undefined,
+  request: operations.GetSubmissionRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.ListFormsResponse,
+    operations.GetSubmissionResponse,
     | errors.ErrorResponse
     | errors.OminityDefaultError
     | ResponseValidationError
@@ -59,12 +51,12 @@ export function formsList(
 
 async function $do(
   client: ClientSDK,
-  request?: operations.FormsListParams | undefined,
+  request: operations.GetSubmissionRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.ListFormsResponse,
+      operations.GetSubmissionResponse,
       | errors.ErrorResponse
       | errors.OminityDefaultError
       | ResponseValidationError
@@ -80,8 +72,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) =>
-      operations.FormsListParams$outboundSchema.optional().parse(value),
+    (value) => operations.GetSubmissionRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -90,27 +81,11 @@ async function $do(
   const payload = parsed.value;
   const body = null;
 
-  const path = "/modules/forms";
+  const path = `/modules/forms/submissions/${payload.id}`;
 
-  const baseQuery = encodeFormQuery({
-    page: payload?.page,
-    limit: payload?.limit,
-    include: payload?.include,
-    sort: payload?.sort,
+  const query = encodeFormQuery({
+    include: payload.include,
   });
-
-  let filterQuery: string | undefined;
-  if (typeof payload?.filter === "string") {
-    filterQuery = encodeFormQuery({ filter: payload.filter });
-  } else if (
-    payload?.filter != null
-    && typeof payload.filter === "object"
-    && !Array.isArray(payload.filter)
-  ) {
-    filterQuery = encodeDeepObjectQuery({ filter: payload.filter });
-  }
-
-  const query = queryJoin(baseQuery, filterQuery);
 
   const headers = new Headers({
     Accept: "application/hal+json",
@@ -122,22 +97,22 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "modules.forms.form.list",
+    operationID: "modules.forms.submissions.get",
     oAuth2Scopes: null,
     resolvedSecurity: requestSecurity,
     securitySource: client._options.security,
     retryConfig: options?.retries
       || client._options.retryConfig
       || {
-      strategy: "backoff",
-      backoff: {
-        initialInterval: 500,
-        maxInterval: 5000,
-        exponent: 2,
-        maxElapsedTime: 7500,
-      },
-      retryConnectionErrors: true,
-    }
+        strategy: "backoff",
+        backoff: {
+          initialInterval: 500,
+          maxInterval: 5000,
+          exponent: 2,
+          maxElapsedTime: 7500,
+        },
+        retryConnectionErrors: true,
+      }
       || { strategy: "none" },
     retryCodes: options?.retryCodes || ["5xx"],
   };
@@ -146,10 +121,10 @@ async function $do(
     security: requestSecurity,
     method: "GET",
     baseURL: options?.serverURL,
-    path: path,
-    headers: headers,
-    query: query,
-    body: body,
+    path,
+    headers,
+    query,
+    body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
@@ -174,7 +149,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.ListFormsResponse,
+    operations.GetSubmissionResponse,
     | errors.ErrorResponse
     | errors.OminityDefaultError
     | ResponseValidationError
@@ -185,7 +160,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, FormsListResponse$inboundSchema, {
+    M.json(200, operations.GetSubmissionResponse$inboundSchema, {
       ctype: "application/hal+json",
     }),
     M.jsonErr("4XX", errors.ErrorResponse$inboundSchema, {
@@ -198,8 +173,5 @@ async function $do(
     return [result, { status: "complete", request: req, response }];
   }
 
-  return [
-    OK(applyPaginationParams(result.value, payload)),
-    { status: "complete", request: req, response },
-  ];
+  return [result, { status: "complete", request: req, response }];
 }

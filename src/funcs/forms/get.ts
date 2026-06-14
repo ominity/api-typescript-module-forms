@@ -84,7 +84,7 @@ async function $do(
   const payload = parsed.value;
   const body = null;
 
-  const path = `/forms/${payload.id}`;
+  const path = `/modules/forms/${payload.id}`;
 
   const query = encodeFormQuery({
     include: payload.include,
